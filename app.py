@@ -26,7 +26,7 @@ SHEET_NAME = os.getenv('GOOGLE_SHEET_NAME')
 CACHE_TIMEOUT = 300  # Cache timeout in seconds (5 minutes)
 
 # Sample file path
-SAMPLE_FILE_PATH = 'freight_data_sample.csv'
+SAMPLE_FILE_PATH = 'PRE BID INTEL SAMPLE.csv'
 
 # Cache for sheet data
 sheet_data_cache = {
