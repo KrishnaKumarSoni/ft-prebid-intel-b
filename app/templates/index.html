@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">Freight Rate Intelligence</a>
+    </nav>
+
+    <div class="container">
+        <div class="upload-section">
+            <h2>Upload Files</h2>
+            <div class="file-tray" id="file-tray">
+                <div class="tray-placeholder" id="tray-placeholder">
+                    <p>Drag & drop files here or click to select files</p>
+                </div>
+                <div class="file-list" id="file-list">
+                    <!-- Selected files will appear here -->
+                </div>
+            </div>
+            <div class="upload-actions">
+                <input type="file" id="file-input" hidden multiple>
+                <button class="btn btn-primary" id="upload-submit">Submit</button>
+                <a href="/download_sample" class="btn btn-secondary" id="download-sample">Download Sample File</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Results Container -->
+    <div class="container" id="analysis-container" style="display: none;">
+        <div class="analysis-section">
+            <h2>Rate Analysis</h2>
+            
+            <!-- Total Savings Analysis -->
+            <div class="analysis-card">
+                <h3>Total Rate Comparison</h3>
+                <div class="analysis-content" id="total-savings-content">
+                    <div class="loading-spinner-container">
+                        <div class="spinner"></div>
+                        <p>Analyzing data...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Top 5 Lanes Analysis -->
+            <div class="analysis-card">
+                <h3>Top 5 Lanes with Maximum Difference</h3>
+                <div class="analysis-content" id="top-lanes-content">
+                    <div class="loading-spinner-container">
+                        <div class="spinner"></div>
+                        <p>Analyzing data...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detailed Analysis -->
+            <div class="analysis-card">
+                <h3>Detailed Insights</h3>
+                <div class="analysis-content" id="detailed-insights-content">
+                    <div class="loading-spinner-container">
+                        <div class="spinner"></div>
+                        <p>Analyzing data...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="filters-container">
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label" for="origin">Origin</label>
+                    <select id="origin">
+                        <option value="">Select Origin</option>
+                        {% for origin in origins %}
+                        <option value="{{ origin }}">{{ origin }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="destination">Destination</label>
+                    <select id="destination" disabled>
+                        <option value="">Select Destination</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="vehicle-type">Vehicle Type</label>
+                    <select id="vehicle-type" disabled>
+                        <option value="">Select Vehicle Type</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="duration">Duration</label>
+                    <select id="duration">
+                        <option value="1">Last 1 month</option>
+                        <option value="3">Last 3 months</option>
+                        <option value="6">Last 6 months</option>
+                        <option value="12">Last 12 months</option>
+                    </select>
+                </div>
+
+                <div class="apply-button-container">
+                    <button id="apply-filters" class="btn btn-primary">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
