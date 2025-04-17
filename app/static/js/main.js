@@ -480,10 +480,10 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Find specific vehicle type
             const filteredLane = currentAnalysisResults.all_lane_differences.find(lane => 
-                lane.origin === origin && 
-                lane.destination === destination && 
-                lane.vehicle_type === vehicleType
-            );
+            lane.origin === origin && 
+            lane.destination === destination && 
+            lane.vehicle_type === vehicleType
+        );
             if (filteredLane) {
                 filteredLanes = [filteredLane];
             }
@@ -537,15 +537,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="rate-cell">
                         ${formatCurrency(lane.uploaded_rate)}
                         <span class="rate-note">(${lane.uploaded_count} rates)</span>
-                    </td>
+                                        </td>
                     <td class="rate-cell">
                         ${formatCurrency(lane.benchmark_rate)}
                         <span class="rate-note">(${lane.benchmark_count} rates)</span>
-                    </td>
+                                        </td>
                     <td class="difference-cell ${lane.difference > 0 ? 'higher' : 'lower'}">
                         ${formatCurrency(Math.abs(lane.difference))} ${lane.difference > 0 ? 'Higher' : 'Lower'}
-                    </td>
-                </tr>
+                                        </td>
+                                    </tr>
             `).join('');
             
             // Scroll to the analysis section

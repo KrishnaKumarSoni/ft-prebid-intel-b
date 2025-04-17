@@ -52,30 +52,10 @@ RATING_CATEGORIES = {
 }
 
 def get_google_sheets_service():
-    # Get credentials from environment variables
-    try:
-        private_key = os.getenv('GOOGLE_SHEETS_PRIVATE_KEY')
-        client_email = os.getenv('GOOGLE_SHEETS_CLIENT_EMAIL')
-        
-        if not private_key or not client_email:
-            raise ValueError("Required Google Sheets credentials not found in environment variables")
-            
-        # Create credentials dict
-        credentials_dict = {
-            "private_key": private_key.replace('\\n', '\n'),  # Fix newlines in private key
-            "client_email": client_email,
-            "type": "service_account",
-        }
-        
-        creds = service_account.Credentials.from_service_account_info(
-            credentials_dict,
-            scopes=SCOPES
-        )
-        service = build('sheets', 'v4', credentials=creds, cache_discovery=True)
-        return service
-    except Exception as e:
-        print(f"Error initializing Google Sheets service: {str(e)}")
-        raise
+    creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    service = build('sheets', 'v4', credentials=creds, cache_discovery=True)
+    return service
 
 def get_sheet_data():
     # Check if cache is valid

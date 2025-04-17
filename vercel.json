@@ -14,11 +14,6 @@
     ],
     "env": {
         "FLASK_ENV": "production",
-        "FLASK_APP": "app.py",
-        "GOOGLE_SHEETS_PRIVATE_KEY": "",
-        "GOOGLE_SHEETS_CLIENT_EMAIL": "",
-        "GOOGLE_SHEET_NAME": "",
-        "GOOGLE_SHEET_ID": "",
-        "SECRET_KEY": ""
+        "FLASK_APP": "app.py"
     }
 } 
