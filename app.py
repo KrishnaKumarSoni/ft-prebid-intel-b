@@ -54,16 +54,26 @@ RATING_CATEGORIES = {
 def get_google_sheets_service():
     """Get Google Sheets service using either credentials file or environment variables"""
     try:
-        # First try to use environment variables (for Vercel)
-        if os.getenv('GOOGLE_CREDENTIALS_JSON'):
-            import json
-            credentials_dict = json.loads(os.getenv('GOOGLE_CREDENTIALS_JSON', '{}'))
-            creds = service_account.Credentials.from_service_account_info(
-                credentials_dict,
-                scopes=SCOPES
-            )
-        # Fallback to credentials file (for local development)
+        # Get credentials from environment variable
+        credentials_json = os.getenv('GOOGLE_CREDENTIALS_JSON')
+        
+        if credentials_json:
+            print("Using credentials from environment variable")  # Debug log
+            try:
+                import json
+                credentials_dict = json.loads(credentials_json)
+                creds = service_account.Credentials.from_service_account_info(
+                    credentials_dict,
+                    scopes=SCOPES
+                )
+            except json.JSONDecodeError as e:
+                print(f"Error parsing credentials JSON: {str(e)}")  # Debug log
+                raise
         else:
+            print("Environment variable GOOGLE_CREDENTIALS_JSON not found, trying credentials file")  # Debug log
+            if not os.path.exists(SERVICE_ACCOUNT_FILE):
+                raise FileNotFoundError(f"Neither environment variable GOOGLE_CREDENTIALS_JSON nor {SERVICE_ACCOUNT_FILE} file found")
+            
             creds = service_account.Credentials.from_service_account_file(
                 SERVICE_ACCOUNT_FILE, 
                 scopes=SCOPES
@@ -72,7 +82,7 @@ def get_google_sheets_service():
         service = build('sheets', 'v4', credentials=creds, cache_discovery=True)
         return service
     except Exception as e:
-        print(f"Error getting Google Sheets service: {str(e)}")
+        print(f"Error getting Google Sheets service: {str(e)}")  # Debug log
         raise
 
 def get_sheet_data():
