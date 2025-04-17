@@ -52,10 +52,28 @@ RATING_CATEGORIES = {
 }
 
 def get_google_sheets_service():
-    creds = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-    service = build('sheets', 'v4', credentials=creds, cache_discovery=True)
-    return service
+    """Get Google Sheets service using either credentials file or environment variables"""
+    try:
+        # First try to use environment variables (for Vercel)
+        if os.getenv('GOOGLE_CREDENTIALS_JSON'):
+            import json
+            credentials_dict = json.loads(os.getenv('GOOGLE_CREDENTIALS_JSON', '{}'))
+            creds = service_account.Credentials.from_service_account_info(
+                credentials_dict,
+                scopes=SCOPES
+            )
+        # Fallback to credentials file (for local development)
+        else:
+            creds = service_account.Credentials.from_service_account_file(
+                SERVICE_ACCOUNT_FILE, 
+                scopes=SCOPES
+            )
+        
+        service = build('sheets', 'v4', credentials=creds, cache_discovery=True)
+        return service
+    except Exception as e:
+        print(f"Error getting Google Sheets service: {str(e)}")
+        raise
 
 def get_sheet_data():
     # Check if cache is valid
