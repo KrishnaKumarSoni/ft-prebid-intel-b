@@ -52,15 +52,20 @@ RATING_CATEGORIES = {
 }
 
 def get_google_sheets_service():
-    # Get credentials from environment variable
+    # Get credentials from environment variables
     try:
-        credentials_info = os.getenv('GOOGLE_CREDENTIALS')
-        if not credentials_info:
-            raise ValueError("GOOGLE_CREDENTIALS environment variable not found")
+        private_key = os.getenv('GOOGLE_SHEETS_PRIVATE_KEY')
+        client_email = os.getenv('GOOGLE_SHEETS_CLIENT_EMAIL')
+        
+        if not private_key or not client_email:
+            raise ValueError("Required Google Sheets credentials not found in environment variables")
             
-        # Parse the JSON string from environment variable
-        import json
-        credentials_dict = json.loads(credentials_info)
+        # Create credentials dict
+        credentials_dict = {
+            "private_key": private_key.replace('\\n', '\n'),  # Fix newlines in private key
+            "client_email": client_email,
+            "type": "service_account",
+        }
         
         creds = service_account.Credentials.from_service_account_info(
             credentials_dict,
