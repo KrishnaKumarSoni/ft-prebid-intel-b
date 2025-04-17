@@ -54,25 +54,33 @@ RATING_CATEGORIES = {
 def get_google_sheets_service():
     """Get Google Sheets service using either credentials file or environment variables"""
     try:
-        # Get credentials from environment variable
-        credentials_json = os.getenv('GOOGLE_CREDENTIALS_JSON')
+        # Try to get individual credential components from environment variables
+        private_key = os.getenv('GOOGLE_SHEETS_PRIVATE_KEY')
+        client_email = os.getenv('GOOGLE_SHEETS_CLIENT_EMAIL')
         
-        if credentials_json:
-            print("Using credentials from environment variable")  # Debug log
+        if private_key and client_email:
+            print("Using credentials from individual environment variables")  # Debug log
+            
+            # Construct credentials dictionary
+            credentials_dict = {
+                "type": "service_account",
+                "private_key": private_key.replace('\\n', '\n'),  # Replace string \n with actual newlines
+                "client_email": client_email,
+                "token_uri": "https://oauth2.googleapis.com/token",
+            }
+            
             try:
-                import json
-                credentials_dict = json.loads(credentials_json)
                 creds = service_account.Credentials.from_service_account_info(
                     credentials_dict,
                     scopes=SCOPES
                 )
-            except json.JSONDecodeError as e:
-                print(f"Error parsing credentials JSON: {str(e)}")  # Debug log
+            except Exception as e:
+                print(f"Error creating credentials from environment variables: {str(e)}")  # Debug log
                 raise
         else:
-            print("Environment variable GOOGLE_CREDENTIALS_JSON not found, trying credentials file")  # Debug log
+            print("Individual environment variables not found, trying credentials file")  # Debug log
             if not os.path.exists(SERVICE_ACCOUNT_FILE):
-                raise FileNotFoundError(f"Neither environment variable GOOGLE_CREDENTIALS_JSON nor {SERVICE_ACCOUNT_FILE} file found")
+                raise FileNotFoundError(f"Neither environment variables nor {SERVICE_ACCOUNT_FILE} file found")
             
             creds = service_account.Credentials.from_service_account_file(
                 SERVICE_ACCOUNT_FILE, 
